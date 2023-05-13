@@ -12,7 +12,7 @@ Once you have obtained your API keys, you can clone this repository to your loca
 
 shell
 Copy code
-$ git clone https://github.com/<your_username>/chatgptbot-discord.git
+$ git clone https://github.com/VeryG00dName/Discord_Chatbot.git
 $ cd chatgptbot-discord
 $ pip install -r requirements.txt
 
