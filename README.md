@@ -4,22 +4,20 @@ This is a Discord bot that uses the OpenAI GPT-3.5 language model to generate re
 
 ## Getting started
 
-To get started, you will need to have Python 3.7 or later installed, as well as valid API keys for both OpenAI and Discord. You can obtain an API key for OpenAI from the [OpenAI API website](https://beta.openai.com/docs/api-reference/introduction). To obtain a Discord bot token, you can follow the instructions in the [Discord Developer Portal](https://discord.com/developers/docs/intro).
+To get started, you will need to have Python 3.7 or later installed, as well as valid API key for OpenAI and a Discord bot token. You can obtain an API key for OpenAI from the [OpenAI API website](https://beta.openai.com/docs/api-reference/introduction). To obtain a Discord bot token, you can follow the instructions in the [Discord Developer Portal](https://discord.com/developers/docs/intro).
 
-Once you have obtained your API keys, you can clone this repository to your local machine and install the required Python packages:
+Once you have obtained your API key and token, you can clone this repository to your local machine and install the required Python packages:<br>
 
- the required Python packages:
-
-shell
-Copy code
-$ git clone https://github.com/VeryG00dName/Discord_Chatbot.git
-$ cd chatgptbot-discord
-$ pip install -r requirements.txt
+$ git clone https://github.com/VeryG00dName/Discord_Chatbot.git<br>
+$ cd chatgptbot-discord<br>
+$ pip install -r requirements.txt<br>
 
 Next, you will need to set your OpenAI and Discord API keys as environment variables. You can do this by creating a new file named `.env` in the root directory of the project, and adding the following lines:
 
 
-$ python bot.py
+discord-token = "your token"<br>
+openai-api = "your api"
+
 ## Contributing
 
 Pull requests are welcome! If you would like to contribute to this project, please create a new branch for your changes and submit a pull request. 
