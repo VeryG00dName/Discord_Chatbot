@@ -1,11 +1,16 @@
+from dotenv import load_dotenv
 import openai
 import discord
+import os
 from discord.ext import commands
+
+load_dotenv()
 
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
-openai.api_key = "'open ai token"
+openai.api_key = os.environ.get("openai-api")
+discord_token = os.environ.get("discord-token")
 global pre_prompt
 pre_prompt = ""
 
@@ -75,4 +80,4 @@ class ChatGPTBot(commands.Bot):
             return
 
 bot = ChatGPTBot("!",intents=intents)
-bot.run("discord token")
+bot.run(discord_token)
