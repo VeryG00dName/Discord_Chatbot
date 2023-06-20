@@ -15,7 +15,7 @@ discord_token = os.environ.get("discord-token")
 global pre_prompt
 global pre_pre_prompt
 pre_pre_prompt = ""
-pre_prompt = "You are a discord bot, there are lots of people in the server don't assume everyone is talking to you aspectly if they don't adress it to you"
+pre_prompt = "You are a discord bot chat bot, there are lots of people in the server don't assume everyone is talking to you aspectly if they don't adress it to you!"
 
 totalk=[
     {
@@ -37,7 +37,7 @@ totalk=[
 functions=[
     {
         "name": "set_pre_promp",
-        "description": "sets your furture pre prompt",
+        "description": "sets your pre prompt",
         "parameters": {
             "type": "object",
             "properties": {
@@ -95,7 +95,7 @@ class ChatGPTBot(commands.Bot):
             # Retrieve the previous messages in the current channel
             channel = message.channel
             message_history = []
-            async for previous_message in channel.history(limit=20):
+            async for previous_message in channel.history(limit=5):
                 # Add the previses messeges to the message history
                 # print(message_history)
                 if previous_message.content == "context block":
@@ -134,7 +134,7 @@ class ChatGPTBot(commands.Bot):
                 )
 
                 response_message = response["choices"][0]["message"]
-                print(response_message.content)
+                print(response_message)
 
                 if response_message.get("function_call"):
                     available_functions = {
@@ -144,11 +144,11 @@ class ChatGPTBot(commands.Bot):
                     function_name = response_message["function_call"]["name"]
                     fuction_to_call = available_functions[function_name]
                     function_args = json.loads(response_message["function_call"]["arguments"])
-                    
-                    if fuction_to_call == "set_pre_promp":
-                        fuction_to_call(pre_prompt=function_args.get("new_pre_prompt"),message=message)
-                    elif fuction_to_call == "art":    
-                            fuction_to_call(art_prompt=function_args.get("art_prompt"),message=message)
+                    print(fuction_to_call)
+                    if fuction_to_call.__name__ == "set_pre_promp":
+                        await fuction_to_call(pre_prompt=function_args.get("new_pre_prompt"))
+                    elif fuction_to_call.__name__ == "art":    
+                            await fuction_to_call(art_prompt=function_args.get("art_prompt"),message=message)
                 else:
                     await message.channel.send(response.choices[0].message.content) 
             
