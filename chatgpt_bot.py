@@ -35,7 +35,7 @@ class ChatGPTBot(commands.Bot):
                 if previous_message.author != self.user:
                     dirty_user_input = previous_message.content.split()
                     clean_user_input = ' '.join(dirty_user_input[1:])
-                    message_history.append({"role": "user", "content": clean_user_input})
+                    message_history.append({"role": "user", "content": str(previous_message.author) + ": " + clean_user_input})
                 else:
                     message_history.append({"role": "assistant", "content": previous_message.content})
             message_history.reverse()
