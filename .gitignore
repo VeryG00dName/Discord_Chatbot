@@ -1,2 +1,3 @@
 .env
 blocked_channels.json
+*.json

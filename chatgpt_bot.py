@@ -26,12 +26,15 @@ except FileNotFoundError:
 
 BLOCKED_USERS_FILE = "blocked_users.json"
 blocked_users = []
+
 # Load the blocked users from the JSON file
 try:
     with open(BLOCKED_USERS_FILE, "r") as f:
         blocked_users = json.load(f)
 except FileNotFoundError:
-    blocked_users = []
+    # Create the file if it doesn't exist
+    with open(BLOCKED_USERS_FILE, "w") as f:
+        json.dump(blocked_users, f)
 
 context_limit = 5
 pre_pre_prompt = ""
@@ -125,6 +128,10 @@ class ChatGPTBot(discord.Bot):
                 message_history.append({"role": "user", "content": f"{previous_message.author} said {previous_message.content}"})
             else:
                 message_history.append({"role": "assistant", "content": previous_message.content})
+        if pre_pre_prompt != "":
+            message_history.append({"role": "assistant", "content": pre_pre_prompt})
+        if pre_prompt != "":
+            message_history.append({"role": "assistant", "content": pre_prompt})
         message_history.reverse()
         print(message_history)
         return message_history
