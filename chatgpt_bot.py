@@ -14,13 +14,25 @@ discord_token = os.environ.get("discord-token")
 global pre_prompt
 global pre_pre_prompt
 global context_limit
+
 BLOCKED_CHANNELS_FILE = "blocked_channels.json"
+blocked_channels = {}
 # Load the blocked channels from the JSON file
 try:
     with open(BLOCKED_CHANNELS_FILE, "r") as f:
         blocked_channels = json.load(f)
 except FileNotFoundError:
-    blocked_channels = []
+    blocked_channels = {}
+
+BLOCKED_USERS_FILE = "blocked_users.json"
+blocked_users = []
+# Load the blocked users from the JSON file
+try:
+    with open(BLOCKED_USERS_FILE, "r") as f:
+        blocked_users = json.load(f)
+except FileNotFoundError:
+    blocked_users = []
+
 context_limit = 5
 pre_pre_prompt = ""
 pre_prompt = "You are a discord bot chat bot, there are lots of people in the server don't assume everyone is talking to you aspectly if they don't adress it to you!"
@@ -91,9 +103,10 @@ async def art(art_prompt,message):
 class ChatGPTBot(discord.Bot):
     async def on_message(self, message):
         global context_limit
-        # Check if the channel is in the list of blocked channels
-        channel_name = message.channel.name
-        if channel_name in blocked_channels:
+        if str(message.author.id) in blocked_users:
+            return
+        server_id = str(message.guild.id)
+        if server_id in blocked_channels and message.channel.name in blocked_channels[server_id]:
             return
         # Handle incoming messages here
         print(message.author,message.channel,message.content)
@@ -182,20 +195,30 @@ async def set_context_limit(ctx, new_context_limit: int):
 @bot.slash_command(name="block_channel", description="Block a channel")
 async def block_channel(ctx, channel_name: str):
     if ctx.author.id == bot.owner_id:
-        # Load the blocked channels from the JSON file
-        try:
-            with open(BLOCKED_CHANNELS_FILE, "r") as f:
-                blocked_channels = json.load(f)
-        except FileNotFoundError:
-            blocked_channels = []
-
-        # Add the new channel to the list of blocked channels
-        blocked_channels.append(channel_name)
+        server_id = str(ctx.guild.id)
+        # Add the new channel to the list of blocked channels for the server
+        if server_id not in blocked_channels:
+            blocked_channels[server_id] = []
+        blocked_channels[server_id].append(channel_name)
 
         # Save the updated list of blocked channels to the JSON file
         with open(BLOCKED_CHANNELS_FILE, "w") as f:
             json.dump(blocked_channels, f)
 
-        await ctx.respond(f"Channel '{channel_name}' has been blocked.")
+        await ctx.respond(f"Channel '{channel_name}' has been blocked in this server.")
+
+@bot.slash_command(name="block_user", description="Block a user")
+async def block_user(ctx, user_id: str):
+    if ctx.author.id == bot.owner_id:
+        # Add the blocked user to the list
+        if user_id not in blocked_users:
+            blocked_users.append(user_id)
+
+        # Save the updated list of blocked users to the JSON file
+        with open(BLOCKED_USERS_FILE, "w") as f:
+            json.dump(blocked_users, f)
+
+        await ctx.respond(f"User with ID '{user_id}' has been blocked.")
+
 
 bot.run(discord_token)
