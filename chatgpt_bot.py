@@ -125,12 +125,18 @@ class ChatGPTBot(discord.Bot):
             if str(previous_message.author.id) in blocked_users:
                 return
             elif previous_message.author != self.user:
-                message_history.append({"role": "user", "content": f"{previous_message.author} said {previous_message.content}"})
+                message_history.append({
+                    "role": "user",
+                    "content": f"{previous_message.author} said {previous_message.content}"
+                })
             else:
-                message_history.append({"role": "assistant", "content": previous_message.content})
-        if pre_pre_prompt != "":
+                message_history.append({
+                    "role": "assistant",
+                    "content": previous_message.content
+                })
+        if pre_pre_prompt:
             message_history.append({"role": "system", "content": pre_pre_prompt})
-        if pre_prompt != "":
+        if pre_prompt:
             message_history.append({"role": "system", "content": pre_prompt})
         message_history.reverse()
         print(message_history)
