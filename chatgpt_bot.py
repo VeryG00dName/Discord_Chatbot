@@ -1,5 +1,3 @@
-import json
-import os
 import openai
 from dotenv import load_dotenv
 import os
@@ -124,14 +122,16 @@ class ChatGPTBot(discord.Bot):
         async for previous_message in channel.history(limit=limit):
             if previous_message.content == "context block":
                 break
-            if previous_message.author != self.user:
+            if str(previous_message.author.id) in blocked_users:
+                return
+            elif previous_message.author != self.user:
                 message_history.append({"role": "user", "content": f"{previous_message.author} said {previous_message.content}"})
             else:
                 message_history.append({"role": "assistant", "content": previous_message.content})
         if pre_pre_prompt != "":
-            message_history.append({"role": "assistant", "content": pre_pre_prompt})
+            message_history.append({"role": "system", "content": pre_pre_prompt})
         if pre_prompt != "":
-            message_history.append({"role": "assistant", "content": pre_prompt})
+            message_history.append({"role": "system", "content": pre_prompt})
         message_history.reverse()
         print(message_history)
         return message_history
