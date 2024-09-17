@@ -112,7 +112,7 @@ class ChatGPTBot(commands.Bot):
             message_history.reverse()
             print(message_history)
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo-0613",
+                model="gpt-4o-mini",
                 messages=message_history,
                 functions=totalk,
                 function_call={"name": "should_i_talk"}
@@ -127,7 +127,7 @@ class ChatGPTBot(commands.Bot):
 
             if bot_answer == "yes":
                 response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo-0613",
+                    model="gpt-4o",
                     messages=message_history,
                     functions=functions,
                     function_call="auto"
